@@ -17,15 +17,27 @@ export function usePitchDetection(): {
 } {
   const [state, setState] = useState<PitchState>({ status: "requesting" });
   const smoothedCentsRef = useRef<number | null>(null);
+  const prevNoteRef = useRef<string | null>(null);
   const animFrameRef = useRef<number>(0);
   const audioContextRef = useRef<AudioContext | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+
+  const cleanup = () => {
+    cancelAnimationFrame(animFrameRef.current);
+    audioContextRef.current?.close();
+    audioContextRef.current = null;
+    streamRef.current?.getTracks().forEach((t) => t.stop());
+    streamRef.current = null;
+  };
 
   const startListening = () => {
+    cleanup();
     setState({ status: "requesting" });
 
     navigator.mediaDevices
       .getUserMedia({ audio: true })
       .then((stream) => {
+        streamRef.current = stream;
         const audioContext = new AudioContext();
         audioContextRef.current = audioContext;
         const source = audioContext.createMediaStreamSource(stream);
@@ -45,8 +57,14 @@ export function usePitchDetection(): {
             audioContext.sampleRate
           );
 
-          if (clarity >= CLARITY_THRESHOLD && frequency > 60 && frequency < 1200) {
+          if (clarity >= CLARITY_THRESHOLD && frequency > 55 && frequency < 1200) {
             const rawNote = frequencyToNote(frequency);
+            const noteKey = rawNote.name + rawNote.octave;
+
+            if (prevNoteRef.current !== noteKey) {
+              smoothedCentsRef.current = null;
+              prevNoteRef.current = noteKey;
+            }
 
             if (smoothedCentsRef.current === null) {
               smoothedCentsRef.current = rawNote.cents;
@@ -80,11 +98,7 @@ export function usePitchDetection(): {
 
   useEffect(() => {
     startListening();
-
-    return () => {
-      cancelAnimationFrame(animFrameRef.current);
-      audioContextRef.current?.close();
-    };
+    return cleanup;
   }, []);
 
   return {
