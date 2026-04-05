@@ -1,1 +1,121 @@
-/* Styles added in Task 6 */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
+
+:root {
+  --color-bg: #0a0a0a;
+  --color-surface: #111111;
+  --color-text: #ededed;
+  --color-muted: #555555;
+  --color-border: #222222;
+  --color-accent: #a0a0a0;
+  --color-in-tune: #22c55e;
+  --font-family: 'DM Sans', system-ui, sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-family);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tuner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding: 32px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.tuner-waiting {
+  font-size: 18px;
+  color: var(--color-muted);
+  font-weight: 300;
+  letter-spacing: 0.02em;
+}
+
+.note-display {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  transition: color 0.2s ease;
+}
+
+.note-name {
+  font-size: 72px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--color-accent);
+  transition: color 0.2s ease;
+}
+
+.note-octave {
+  font-size: 28px;
+  font-weight: 300;
+  color: var(--color-muted);
+}
+
+.in-tune .note-name {
+  color: var(--color-in-tune);
+}
+
+.cents-display {
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--color-muted);
+  letter-spacing: 0.01em;
+  transition: color 0.2s ease;
+}
+
+.in-tune .cents-display {
+  color: var(--color-in-tune);
+}
+
+.mic-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+  padding: 32px;
+}
+
+.mic-error p {
+  font-size: 16px;
+  color: var(--color-muted);
+  font-weight: 300;
+  line-height: 1.5;
+  max-width: 280px;
+}
+
+.mic-error button {
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: var(--font-family);
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+
+.mic-error button:hover {
+  border-color: var(--color-muted);
+}
